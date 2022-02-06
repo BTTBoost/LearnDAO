@@ -59,3 +59,37 @@ export const tokenApprove = async (
   var txn = await tokenContract.approve(spender, amountInWei);
   await txn.wait();
 };
+
+export const getStatus = (status: number): string => {
+  switch (status) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "Active";
+    case 2:
+      return "Canceled";
+    case 3:
+      return "Defeated";
+    case 4:
+      return "Succeeded";
+    case 5:
+      return "Queued";
+    case 6:
+      return "Expired";
+    case 7:
+      return "Executed";
+    default:
+      return "Pending";
+  }
+};
+
+export enum ProposalState {
+  Pending,
+  Active,
+  Canceled,
+  Defeated,
+  Succeeded,
+  Queued,
+  Expired,
+  Executed,
+}

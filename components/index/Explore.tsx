@@ -3,7 +3,7 @@ import BtnGradientBorder from "../common/BtnGradientBorder";
 
 const Explore = () => {
   return (
-    <div className="mx-auto max-w-7xl flex flex-col items-center justify-center relative mb-10">
+    <div className="mx-auto max-w-6xl flex flex-col items-center justify-center relative mb-10">
       <span className="font-display font-bold text-white text-5xl">
         Explore Our Articles
       </span>

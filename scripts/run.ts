@@ -1,6 +1,5 @@
 import { Signer } from "ethers";
 import { ethers } from "hardhat";
-import erc20Abi from "./erc20api.json";
 var daiToken = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 const main = async () => {
@@ -33,106 +32,26 @@ const main = async () => {
   var txn = await tokenContract.setMinterRole(learnDaoContract.address);
   await txn.wait();
 
-  var minterRole = await tokenContract.checkMinterRole(
-    learnDaoContract.address
-  );
-
-  if (minterRole == true) {
-    console.log("[LOG] LearnDAO is now a MINTER");
-  }
-
-  var txn = await tokenContract.setPauserRole(learnDaoContract.address);
-  await txn.wait();
-
-  var pauserRole = await tokenContract.checkPauserRole(
-    learnDaoContract.address
-  );
-
-  if (pauserRole == true) {
-    console.log("[LOG] LearnDAO is now a PAUSER");
-  }
-
   var signer: Signer = ethers.provider.getSigner();
+  var address = await accounts[0].getAddress();
+  console.log("address", address);
 
-  var daiContract = new ethers.Contract(daiToken, erc20Abi, signer);
-
-  var balance = await daiContract.balanceOf(accounts[0].getAddress());
-  console.log("balance", balance);
-  var balance2 = await daiContract.balanceOf(accounts[1].getAddress());
-  console.log("balance2", balance2);
-  console.log('ethers.utils.parseEther("20")', ethers.utils.parseEther("20"));
-  // approve dai token
-  var txn = await daiContract.approve(
-    learnDaoContract.address,
-    ethers.utils.parseEther("20")
+  const transferCalldata = learnDaoContract.interface.encodeFunctionData(
+    "setAcceptedProposal",
+    ["#1", address]
   );
-  await txn.wait();
 
-  // check allowance
-  var allowance = await daiContract.allowance(
-    accounts[0].getAddress(),
-    learnDaoContract.address
+  var txn = await learnDaoContract.propose(
+    [learnDaoContract.address],
+    [0],
+    [transferCalldata],
+    "Proposal #1: Give grant to team"
   );
-  console.log("allowance ; ", allowance);
-
-  txn = await tokenContract.mint(
-    accounts[1].getAddress(),
-    ethers.utils.parseEther("10")
+  var rc = await txn.wait();
+  const event = rc.events.find(
+    (event: any) => event.event === "ProposalCreated"
   );
-  txn.wait();
-  var tokenbal = await tokenContract.balanceOf(accounts[1].getAddress());
-  console.log("tokenbal", tokenbal);
-  console.log("accounts[1].getAddress()", accounts[1].getAddress());
-
-  var balance3 = await tokenContract.balanceOf(accounts[0].getAddress());
-  console.log("balance3", balance3);
-
-  var checkMinterRole = await tokenContract.checkMinterRole(
-    learnDaoContract.address
-  );
-  console.log("checkMinterRole", checkMinterRole);
-
-  txn = await learnDaoContract.addMember(ethers.utils.parseEther("10"));
-  await txn.wait();
-
-  var balance4 = await tokenContract.balanceOf(accounts[0].getAddress());
-  console.log("balance4", balance4);
-
-  // const transferCalldata = tokenContract.interface.encodeFunctionData(
-  //   "transfer",
-  //   ["0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199", "10"]
-  // );
-  // console.log("transferCalldata", transferCalldata);
-
-  // learnDaoContract.on("ProposalCreated", (id) => {
-  //   console.log("id", id);
-  // });
-
-  // var txn = await learnDaoContract.propose(
-  //   [tokenContract.address],
-  //   [0],
-  //   [transferCalldata],
-  //   "Proposal #1: Give grant to team"
-  // );
-  // var rc = await txn.wait();
-  // const event = rc.events.find(
-  //   (event: any) => event.event === "ProposalCreated"
-  // );
-  // const [
-  //   proposalId,
-  //   proposer,
-  //   targets,
-  //   values,
-  //   signatures,
-  //   calldatas,
-  //   startBlock,
-  //   endBlock,
-  //   description,
-  // ] = event.args;
-  // console.log("proposalId", proposalId);
-  // console.log("proposer", proposer);
-  // console.log("targets", targets);
-  // console.log("description", description);
+  const [proposalId] = event.args;
 
   // var name = await learnDaoContract.name();
   // console.log("name : ", name);
@@ -146,17 +65,14 @@ const main = async () => {
   // var votingDelay = await learnDaoContract.votingDelay();
   // console.log("votingDelay : ", votingDelay);
 
-  // var votingPeriod = await learnDaoContract.votingPeriod();
-  // console.log("votingPeriod : ", votingPeriod);
+  var votingPeriod = await learnDaoContract.votingPeriod();
+  console.log("votingPeriod : ", votingPeriod);
 
-  // var state = await learnDaoContract.state(proposalId);
-  // console.log("state : ", state);
+  var proposalSnapshot = await learnDaoContract.proposalSnapshot(proposalId);
+  console.log("proposalSnapshot : ", proposalSnapshot);
 
-  // var proposalSnapshot = await learnDaoContract.proposalSnapshot(proposalId);
-  // console.log("proposalSnapshot : ", proposalSnapshot);
-
-  // var proposalDeadline = await learnDaoContract.proposalDeadline(proposalId);
-  // console.log("proposalDeadline : ", proposalDeadline);
+  var proposalDeadline = await learnDaoContract.proposalDeadline(proposalId);
+  console.log("proposalDeadline : ", proposalDeadline);
 
   // var blockNum = await ethers.provider.getBlockNumber();
   // var quorum = await learnDaoContract.quorum(blockNum - 1);
@@ -175,20 +91,53 @@ const main = async () => {
   // );
   // console.log("getVotes[1] : ", getVotes2);
 
-  // var txn = await learnDaoContract.castVote(proposalId, 1);
-  // var rc = await txn.wait();
-  // const voteEvent = rc.events.find((event: any) => event.event === "VoteCast");
-  // console.log("voteEvent : ", voteEvent.args);
+  var txn = await learnDaoContract.castVote(proposalId, 1);
+  var rc = await txn.wait();
+  const voteEvent = rc.events.find((event: any) => event.event === "VoteCast");
+  console.log("voteEvent : ", voteEvent.args);
 
+  var blockNum = await ethers.provider.getBlockNumber();
+  console.log("blockNum", blockNum);
+  await sleep(3000);
+  var state = await learnDaoContract.state(proposalId);
+  console.log("state : ", state);
+
+  await sleep(1 * 60 * 1000);
   // var hasVoted = await learnDaoContract.hasVoted(
   //   proposalId,
   //   accounts[0].getAddress()
   // );
   // console.log("hasVoted : ", hasVoted);
 
-  // var proposalVotes = await learnDaoContract.proposalVotes(proposalId);
-  // console.log("proposalVotes : ", proposalVotes);
+  var blockNum = await ethers.provider.getBlockNumber();
+  console.log("blockNum", blockNum);
+  var proposalVotes = await learnDaoContract.proposalVotes(proposalId);
+  console.log("proposalVotes : ", proposalVotes);
+
+  var state = await learnDaoContract.state(proposalId);
+  console.log("state : ", state);
+
+  if (state === 4) {
+    var res = await learnDaoContract.execute(
+      [learnDaoContract.address],
+      [0],
+      [transferCalldata],
+      ethers.utils.keccak256(
+        ethers.utils.toUtf8Bytes("Proposal #1: Give grant to team")
+      )
+    );
+    console.log("res", res);
+    await sleep(1000);
+    var userAdd = await learnDaoContract.acceptedProposal("#1");
+    var txn = await learnDaoContract.disburseIncentive("#1", userAdd, 20);
+    await txn.wait();
+    console.log("userAdd", userAdd);
+  }
 };
+
+function sleep(time: number | undefined) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 const runMain = async () => {
   try {
@@ -201,3 +150,14 @@ const runMain = async () => {
 };
 
 runMain();
+
+// enum ProposalState {
+//   Pending,
+//   Active,
+//   Canceled,
+//   Defeated,
+//   Succeeded,
+//   Queued,
+//   Expired,
+//   Executed
+// }

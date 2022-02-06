@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ["Poppins"],
+        sans: ["Poppins"],
+        display: ["Poppins", "sans-serif"],
       },
       animation: {
         blob: "blob 5s infinite",

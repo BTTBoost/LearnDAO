@@ -7,8 +7,6 @@ const Chat = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("isInitialized :>> ", isInitialized);
-    console.log("isAuthenticated :>> ", isAuthenticated);
     if (isInitialized && (!isAuthenticated || !user)) {
       router.replace("/");
     }

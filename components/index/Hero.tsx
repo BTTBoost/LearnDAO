@@ -3,7 +3,7 @@ import React from "react";
 const Hero = () => {
   return (
     <>
-      <div className="mx-auto py-32 max-w-7xl flex flex-row items-center justify-center relative">
+      <div className="mx-auto py-32 max-w-6xl flex flex-row items-center justify-center relative">
         <div className="absolute top-40 left-1/4 w-96 h-96 bg-pink-500 rounded-full mix-blend-normal filter blur-3xl opacity-40 animate-blob"></div>
         <div className="absolute top-40 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-normal filter blur-3xl opacity-40 animate-blob animation-delay-3000"></div>
         <div className="w-3/5 flex flex-col relative opacity-100 ">

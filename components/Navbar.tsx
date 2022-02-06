@@ -22,7 +22,7 @@ const Navbar = () => {
         onClose={() => setConnectModalOpen(false)}
       />
       <header className="border-b border-gray-700">
-        <div className="mx-auto flex max-w-7xl items-center justify-between p-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between p-4">
           <LearnDAOLogo />
 
           <nav className="flex items-center space-x-1 text-sm font-medium text-gray-800">

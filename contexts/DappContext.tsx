@@ -18,10 +18,19 @@ export const DappProvider: React.FC = ({ children }) => {
 export const useDapp = () => useContext<DappContextProps>(DappContext);
 
 export const useProviderData = () => {
-  const { isInitialized, Moralis } = useMoralis();
+  const { isInitialized, Moralis, logout } = useMoralis();
   const [isLoading, setIsLoading] = useState(false);
   const [currentAccount, setCurrentAccount] = useState<String | null>(null);
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = Moralis.onChainChanged((chain) => {
+      logout();
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (isInitialized) {

@@ -39,3 +39,72 @@ body {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+.reactMarkDown h1 {
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown h6 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown p {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 1rem;
+  opacity: 0.75;
+}
+
+.reactMarkDown ul {
+  padding-left: 40px;
+  list-style: disc;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.reactMarkDown li {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #fff;
+  opacity: 0.75;
+  margin-bottom: 1rem;
+}

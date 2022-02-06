@@ -24,11 +24,13 @@ contract LearnDAOGovernor is
     address _daiToken = address(0x5FbDB2315678afecb367f032d93F642f64180aa3);
     address _governanceToken;
 
+    mapping(string => address) public acceptedProposal;
+
     constructor(ERC20Votes _token, string memory _name)
         Governor(_name)
         GovernorSettings(
             0, /* 0 block by default for testing */
-            103680, /* 3 days */
+            2, /* 2 block */
             0
         )
         GovernorVotes(_token)
@@ -44,6 +46,23 @@ contract LearnDAOGovernor is
         );
         IERC20(_daiToken).transferFrom(msg.sender, address(this), _amount);
         ERC20Interface(_governanceToken).mint(address(msg.sender), _amount);
+    }
+
+    function setAcceptedProposal(string memory _id, address user) public {
+        acceptedProposal[_id] = user;
+    }
+
+    function disburseIncentive(
+        string memory _id,
+        address _user,
+        uint256 _amount
+    ) public {
+        require(acceptedProposal[_id] != address(0), "Proposal not accepted");
+        require(
+            acceptedProposal[_id] == _user,
+            "Only the proposer can disburse"
+        );
+        ERC20Interface(_governanceToken).mint(address(_user), _amount);
     }
 
     function receiveEthForTransactions() public payable {
