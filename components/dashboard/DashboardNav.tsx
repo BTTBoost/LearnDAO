@@ -1,3 +1,4 @@
+import { Hashicon } from "@emeraldpay/hashicon-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -14,7 +15,8 @@ const DashboardNav = () => {
         {/* Profile Section */}
         {isAuthenticated && (
           <div className="flex flex-row items-center space-x-3 group p-2 rounded-lg cursor-pointer">
-            <div className="w-12 h-12 rounded-full bg-red-500"></div>
+            <Hashicon value={"value"} size={50} />
+            {/* <div className="w-12 h-12 rounded-full bg-red-500"></div> */}
             <div className="flex-1 flex flex-col">
               <span className="font-display font-bold text-lg text-white group-hover:text-transparent bg-clip-text bg-gradient-to-r group-hover:to-purple-600 group-hover:from-pink-500">
                 {user.getUsername()}

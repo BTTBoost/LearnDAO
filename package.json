@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "0xsequence": "^0.36.1",
+    "@emeraldpay/hashicon-react": "^0.5.1",
     "@headlessui/react": "^1.4.3",
     "@openzeppelin/contracts": "^4.4.1",
     "@types/base-64": "^1.0.0",
