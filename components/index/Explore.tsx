@@ -36,7 +36,10 @@ const Explore = ({ showButton = true }) => {
                 key={index}
                 className="flex flex-col items-start justify-center"
               >
-                <img src={item.get("bannerImage")} className="rounded-t-3xl" />
+                <img
+                  src={item.get("bannerImage")}
+                  className="rounded-t-3xl w-full"
+                />
                 <div className="flex flex-col bg-[#1C1B26] w-full p-5 rounded-b-3xl pb-10">
                   <span className="font-display text-xl font-bold text-white">
                     {item.get("title")}

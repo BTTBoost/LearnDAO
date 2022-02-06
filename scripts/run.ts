@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 import { ethers } from "hardhat";
-var daiToken = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+var daiToken = "0x12e5d27fb5301f8a0fFf041C34B604fdE82a4A47";
 
 const main = async () => {
   let accounts: Signer[];
@@ -18,7 +18,8 @@ const main = async () => {
 
   const learnDaoContract = await learnDaoFactory.deploy(
     tokenContract.address,
-    "LearnDAOGovernor"
+    "LearnDAOGovernor",
+    daiToken
   );
   await learnDaoContract.deployed();
   console.log("learnDaoContract address", learnDaoContract.address);

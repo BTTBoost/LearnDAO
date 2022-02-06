@@ -11,17 +11,6 @@ const main = async () => {
   console.log(daiTokenContract.address);
   var balance = await daiTokenContract.balanceOf(accounts[0].getAddress());
   console.log("balance", balance);
-
-  var txn = await daiTokenContract.transfer(
-    "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-    ethers.utils.parseEther("20")
-  );
-  txn.wait();
-
-  var balance2 = await daiTokenContract.balanceOf(
-    "0x70997970c51812dc3a010c7d01b50e0d17dc79c8"
-  );
-  console.log("balance2", balance2);
 };
 
 const runMain = async () => {

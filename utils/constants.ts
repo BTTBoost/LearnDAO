@@ -1,7 +1,7 @@
 // Add your smart contract address here
-export const CONTRACT_ADDRESS = "0x998abeb3E57409262aE5b751f60747921B33613E";
-export const DAI_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const LDAO_ADRESS = "0xf5059a5D33d5853360D16C683c16e67980206f36";
+export const CONTRACT_ADDRESS = "0x856fC5DB5672e683446a98aDD7f83FA84a70e1b7";
+export const DAI_ADDRESS = "0x12e5d27fb5301f8a0fFf041C34B604fdE82a4A47";
+export const LDAO_ADRESS = "0xb91A02694deF8330DbC09C8660a3BCC5FD107069";
 
 export const categories = [
   "Web3",

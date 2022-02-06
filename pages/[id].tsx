@@ -60,7 +60,7 @@ const Content = () => {
               back
             </a>
           </Link>
-          <span className="text-white font-extrabold text-3xl text-center flex flex-col items-start">
+          <span className="text-white font-extrabold text-3xl flex flex-col items-start">
             <span className="text-transparent bg-clip-text bg-gradient-to-r to-purple-600 from-pink-500">
               {content?.get("category")}
             </span>
@@ -73,7 +73,9 @@ const Content = () => {
             <span className="text-white font-normal text-base mt-0 opacity-60">
               {"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"}
             </span>
-            <Markdown>{content?.get("content")}</Markdown>
+            <div className="reactMarkDown mt-5">
+              <Markdown>{content?.get("content")}</Markdown>
+            </div>
           </span>
         </div>
       </div>
