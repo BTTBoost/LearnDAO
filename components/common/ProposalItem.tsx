@@ -76,10 +76,6 @@ const ProposalItem: React.FC<Props> = ({
             <span className="text-white text-sm font-display font-semibold opacity-70 mt-3">
               Voting ends on - Block {deadline}
             </span>
-            <span className="text-white text-sm font-display font-semibold opacity-70 mt-3">
-              {" "}
-              Voting started on - Block {votingPeriod}
-            </span>
           </div>
         </a>
       </Link>
