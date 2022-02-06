@@ -21,21 +21,26 @@ contract LearnDAOGovernor is
     GovernorVotes,
     GovernorVotesQuorumFraction
 {
-    address _daiToken = address(0x5FbDB2315678afecb367f032d93F642f64180aa3);
+    address _daiToken;
     address _governanceToken;
 
     mapping(string => address) public acceptedProposal;
 
-    constructor(ERC20Votes _token, string memory _name)
+    constructor(
+        ERC20Votes _token,
+        string memory _name,
+        address _tokenToAccept
+    )
         Governor(_name)
         GovernorSettings(
             0, /* 0 block by default for testing */
-            2, /* 2 block */
+            90, /* 3 min */
             0
         )
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
     {
+        _daiToken = _tokenToAccept;
         _governanceToken = address(_token);
     }
 

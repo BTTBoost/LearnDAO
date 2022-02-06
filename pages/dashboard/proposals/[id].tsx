@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { FaTwitter } from "react-icons/fa";
 import Markdown from "react-markdown";
 import { useMoralis } from "react-moralis";
 import RegisterUser from "../../../components/dashboard/RegisterUser";
@@ -19,7 +20,8 @@ import {
 import { getStatus } from "../../../utils/helper";
 
 const ProposalPage = () => {
-  const { user, Moralis, isInitializing, isInitialized } = useMoralis();
+  const { user, Moralis, isInitializing, isInitialized, isAuthenticated } =
+    useMoralis();
   const router = useRouter();
   const { id } = router.query;
 
@@ -34,7 +36,7 @@ const ProposalPage = () => {
   const [ipfs, setIpfs] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
   const [hasVoted, setHasVoted] = React.useState(false);
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [userAddress, setUserAddress] = React.useState("");
   const [votes, setVotes] = React.useState({
     for: "0",
     against: "0",
@@ -56,8 +58,12 @@ const ProposalPage = () => {
       var proposal = await query.get(id.toString());
 
       var user = proposal.get("user");
-      await user.fetch();
-      setAuthor(user.toJSON().accounts[0]);
+      const User = Moralis.Object.extend("User");
+      const userQuery = new Moralis.Query(User);
+      var userRes = await userQuery.equalTo("username", user).first();
+      var address = userRes?.toJSON().accounts[0];
+      setUserAddress(userRes?.toJSON().accounts[0]);
+      setAuthor(user);
 
       var ipfsUrl = proposal.get("content");
       setIpfs(ipfsUrl);
@@ -128,39 +134,46 @@ const ProposalPage = () => {
             ? "0"
             : ethers.utils.formatUnits(proposals[2], 18).toString(),
       });
-
-      var voted = await learnDaoContract.hasVoted(
-        proposalId,
-        user.toJSON().accounts[0]
-      );
-      setHasVoted(voted);
+      if (address) {
+        var voted = await learnDaoContract.hasVoted(proposalId, address);
+        setHasVoted(voted);
+      }
     } catch (error) {
       console.log("error :>> ", error);
     }
   };
 
-  const fetchVotes = async () => {
-    var proposals = await ldaoContract.proposalVotes(proposalId);
-    setVotes({
-      for:
-        proposals[1] == BigNumber.from(0)
-          ? "0"
-          : ethers.utils.formatUnits(proposals[0], 18).toString(),
-      against:
-        proposals[0] == BigNumber.from(0)
-          ? "0"
-          : ethers.utils.formatUnits(proposals[1], 18).toString(),
-      abstain:
-        proposals[2] == BigNumber.from(0)
-          ? "0"
-          : ethers.utils.formatUnits(proposals[2], 18).toString(),
-    });
+  const updateCurrStatus = async () => {
+    try {
+      var state = await ldaoContract.state(proposalId);
+      setCurrStatus(getStatus(state));
+    } catch (e) {
+      console.log("e :>> ", e);
+    }
+  };
 
-    var voted = await ldaoContract.hasVoted(
-      proposalId,
-      user.toJSON().accounts[0]
-    );
-    setHasVoted(voted);
+  const fetchVotes = async () => {
+    try {
+      var proposals = await ldaoContract.proposalVotes(proposalId);
+      setVotes({
+        for:
+          proposals[1] == BigNumber.from(0)
+            ? "0"
+            : ethers.utils.formatUnits(proposals[0], 18).toString(),
+        against:
+          proposals[0] == BigNumber.from(0)
+            ? "0"
+            : ethers.utils.formatUnits(proposals[1], 18).toString(),
+        abstain:
+          proposals[2] == BigNumber.from(0)
+            ? "0"
+            : ethers.utils.formatUnits(proposals[2], 18).toString(),
+      });
+      var voted = await ldaoContract.hasVoted(proposalId, userAddress);
+      setHasVoted(voted);
+    } catch (e) {
+      console.log("e :>> ", e);
+    }
   };
 
   if (isInitializing) {
@@ -173,7 +186,7 @@ const ProposalPage = () => {
         <title>LearnDAO - Dashboard</title>
       </Head>
       <DashboardNavbar />
-      {user?.getEmail() === undefined ? (
+      {isAuthenticated && user?.getEmail() === undefined ? (
         <RegisterUser />
       ) : (
         <div className="mx-auto py-10 max-w-5xl flex flex-row items-start justify-center">
@@ -200,10 +213,33 @@ const ProposalPage = () => {
             <span className="text-white font-extrabold text-3xl text-center">
               {proposal?.get("title")}
             </span>
-            <div className="flex flex-row mt-5 w-full space-y-5">
+            <div className="flex flex-row items-center justify-between mt-5 w-full space-y-5">
               <span className="bg-green-500 rounded-full px-4 py-1 text-sm text-white font-bold ">
                 {currStatus}
               </span>
+              <div className="flex flex-row space-x-5">
+                <FaTwitter
+                  color="rgb(59 130 246)"
+                  className="h-6 w-6 cursor-pointer"
+                />
+                <div className="flex flex-row space-3 opacity-60 cursor-pointer">
+                  <span className="text-white font-bold">Copy</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
             <article className="reactMarkDown mt-5">
               <Markdown>{content}</Markdown>
@@ -218,10 +254,7 @@ const ProposalPage = () => {
               <div className="px-6 py-5 text-white flex flex-col text-sm space-y-2">
                 <div className="flex flex-row justify-between">
                   <span className="opacity-60">Author</span>
-                  <span>
-                    {author.substring(0, 6)}......
-                    {author.substring(author.length - 6, author.length)}
-                  </span>
+                  <span>{author}</span>
                 </div>
                 <div className="flex flex-row justify-between">
                   <span className="opacity-60">IPFS</span>
@@ -349,24 +382,26 @@ const ProposalPage = () => {
                 </div>
               </div>
             </div>
+            {isAuthenticated && currStatus !== "Pending" && (
+              <MyVote
+                proposalId={proposalId}
+                userAddress={userAddress}
+                hasVoted={hasVoted}
+                fetchVotes={fetchVotes}
+                status={currStatus}
+              />
+            )}
 
-            <MyVote
-              proposalId={proposalId}
-              userAddress={user.toJSON().accounts[0]}
-              hasVoted={hasVoted}
-              fetchVotes={fetchVotes}
-              status={currStatus}
-            />
-
-            {currStatus === "Succeeded" && (
+            {isAuthenticated && currStatus === "Succeeded" && (
               <ExecuteVote
                 proposalId={proposalId}
-                userAddress={user.toJSON().accounts[0]}
+                userAddress={userAddress}
                 hasVoted={hasVoted}
                 fetchVotes={fetchVotes}
                 status={currStatus}
                 id={proposal?.id ?? ""}
                 value={content}
+                updateCurrStatus={updateCurrStatus}
               />
             )}
           </div>
@@ -384,10 +419,10 @@ const MyVote = ({ proposalId, userAddress, hasVoted, fetchVotes, status }) => {
   const [votingPower, setVotingPower] = useState("");
 
   useEffect(() => {
-    if (isInitialized && isWeb3Enabled) {
+    if (isInitialized && isWeb3Enabled && userAddress) {
       getVotePower();
     }
-  }, [isInitialized, isWeb3Enabled]);
+  }, [isInitialized, isWeb3Enabled, userAddress]);
 
   const getVotePower = async () => {
     const signer = Moralis.web3.getSigner();
@@ -396,7 +431,6 @@ const MyVote = ({ proposalId, userAddress, hasVoted, fetchVotes, status }) => {
       ldaoTokenAbi.abi,
       signer
     );
-
     var votePower = await ldaoTokenContract.balanceOf(userAddress);
 
     setVotingPower(ethers.utils.formatUnits(votePower, 18));
@@ -474,16 +508,19 @@ const ExecuteVote = ({
   status,
   id,
   value,
+  updateCurrStatus,
 }) => {
   const { Moralis, isInitialized } = useMoralis();
   const { isWeb3Enabled } = useDapp();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isInitialized && isWeb3Enabled) {
+    if (isInitialized && isWeb3Enabled && userAddress) {
     }
-  }, [isInitialized, isWeb3Enabled]);
+  }, [isInitialized, isWeb3Enabled, userAddress]);
 
   const execute = async () => {
+    setLoading(true);
     const signer = Moralis.web3.getSigner();
 
     var learnDaoContract = new ethers.Contract(
@@ -501,6 +538,9 @@ const ExecuteVote = ({
       [transferCalldata],
       ethers.utils.keccak256(ethers.utils.toUtf8Bytes(value))
     );
+    await res.wait();
+    await updateCurrStatus();
+    setLoading(false);
   };
 
   return (
@@ -515,10 +555,13 @@ const ExecuteVote = ({
             onClick={() => {
               execute();
             }}
-            className="rounded-full relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden text-sm font-medium text-gray-900 group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-800"
+            disabled={loading}
+            className={`${
+              loading && "opacity-30 cursor-not-allowed"
+            } rounded-full relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden text-sm font-medium text-gray-900 group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-800`}
           >
             <span className="w-full rounded-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 group-hover:bg-opacity-0">
-              Execute
+              {loading ? "Please Wait..." : "Execute"}
             </span>
           </button>
         </div>

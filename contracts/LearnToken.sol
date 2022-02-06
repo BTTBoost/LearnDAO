@@ -24,7 +24,7 @@ contract LearnToken is
     constructor() ERC20("Learn Token", "LDAO") ERC20Permit("Learn Token") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
-        _mint(msg.sender, 1000 * 10**decimals());
+        _mint(msg.sender, 100 * 10**decimals());
         _grantRole(MINTER_ROLE, msg.sender);
     }
 

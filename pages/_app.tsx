@@ -17,8 +17,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
 
       <MoralisProvider
-        appId="WVhhRGSWxhvme5EdbXCelwB3I15GjoxpB7lTpo8Y"
-        serverUrl="https://ffpeksyu96fx.usemoralis.com:2053/server"
+        appId="EFfmGC0tiBge9fkJGJEnPAbo64ghepyXAAacOwR7"
+        serverUrl="https://0o1ygne2rykg.usemoralis.com:2053/server/"
         initializeOnMount
       >
         <DappProvider>

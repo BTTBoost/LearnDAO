@@ -30,12 +30,12 @@ const RegisterUser = () => {
   const [btnLoading, setBtnLoading] = useState(false);
 
   useEffect(() => {
-    if (isWeb3Enabled) {
+    if (isWeb3Enabled && user) {
       getDaiBalance();
       checkAllowance();
       getLDAOBalance();
     }
-  }, [isWeb3Enabled]);
+  }, [isWeb3Enabled, user]);
 
   const getDaiBalance = async () => {
     var daiBalance = await getTokenBalance(
@@ -218,7 +218,7 @@ const RegisterUser = () => {
             <button
               onClick={() => {
                 if (!btnLoading)
-                  if (userDaiAllowance >= 20) {
+                  if (userDaiAllowance >= 10) {
                     becomeMember();
                   } else {
                     approveDai();

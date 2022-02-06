@@ -15,8 +15,7 @@ const Hero = () => {
             to Web3
           </span>
           <span className="text-white opacity-60 font-bold text-2xl mt-4">
-            We're a learning DAO creating quality web3 education. Get our "12
-            Days of Web3" email series or start learning at your own pace.
+            We're a learning DAO creating quality web3 education.
           </span>
           <div className="py-5 inline-block">
             <a className="inline-flex items-center flex-row space-x-2 cursor-pointer hover-underline-animation text-white hover:text-pink-500 transition-all delay-100 font-bold text-3xl">
@@ -38,7 +37,9 @@ const Hero = () => {
             </a>
           </div>
         </div>
-        <div className="w-2/5"></div>
+        <div className="w-2/5 px-10">
+          <img src="https://blog.viralsangani.me/static/400824c7ea9296009e0210f156d4b4e3/63626/home-hero.webp" />
+        </div>
       </div>
     </>
   );

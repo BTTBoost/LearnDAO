@@ -9,7 +9,7 @@ import { getStatus } from "../../utils/helper";
 interface Props {
   title: string;
   description: string;
-  user: any;
+  user: string;
   proposalId: string;
   id: string;
 }
@@ -30,13 +30,11 @@ const ProposalItem: React.FC<Props> = ({
 
   useEffect(() => {
     fetchContractData();
-    user.fetch().then(() => {
-      setUserId(user.toJSON().accounts[0]);
-    });
   });
 
   const fetchContractData = async () => {
     try {
+      setUserId(user);
       const signer = Moralis.web3.getSigner();
 
       var learnDaoContract = new ethers.Contract(
@@ -50,9 +48,6 @@ const ProposalItem: React.FC<Props> = ({
       var started = await learnDaoContract.votingPeriod();
       setVotingPeriod(started.toNumber());
 
-      // var proposalSnapshot = await learnDaoContract.proposalSnapshot(
-      //   proposalId
-      // );
       setCurrStatus(getStatus(state));
     } catch (error) {
       console.log("error :>> ", error);

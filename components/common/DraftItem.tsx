@@ -1,10 +1,6 @@
-import { ethers } from "ethers";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import contractAbi from "../../utils/ABIs/LearnDAOGovernor.json";
-import { CONTRACT_ADDRESS } from "../../utils/constants";
-import { getStatus } from "../../utils/helper";
 
 interface Props {
   title: string;
@@ -23,37 +19,20 @@ const DraftItem: React.FC<Props> = ({
 }) => {
   const { Moralis } = useMoralis();
   const [userId, setUserId] = React.useState("");
-  const [currStatus, setCurrStatus] = React.useState("");
   const [deadline, setDeadline] = React.useState("");
   const [votingPeriod, setVotingPeriod] = React.useState("");
-  const [proposalDeadline, setProposalDeadline] = React.useState("");
+  const [mode, setMode] = React.useState("");
 
   useEffect(() => {
     fetchContractData();
-    user.fetch().then(() => {
-      setUserId(user.toJSON().accounts[0]);
-    });
   });
 
   const fetchContractData = async () => {
     try {
-      const signer = Moralis.web3.getSigner();
-
-      var learnDaoContract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        contractAbi.abi,
-        signer
-      );
-      var state = await learnDaoContract.state(proposalId);
-      var deadline = await learnDaoContract.proposalDeadline(proposalId);
-      setDeadline(deadline.toNumber());
-      var started = await learnDaoContract.votingPeriod();
-      setVotingPeriod(started.toNumber());
-
-      // var proposalSnapshot = await learnDaoContract.proposalSnapshot(
-      //   proposalId
-      // );
-      setCurrStatus(getStatus(state));
+      const Content = Moralis.Object.extend("Content");
+      const query = new Moralis.Query(Content);
+      var res = await query.equalTo("proposalMoralisId", id.toString()).find();
+      setMode(res[0].get("mode"));
     } catch (error) {
       console.log("error :>> ", error);
     }
@@ -61,14 +40,20 @@ const DraftItem: React.FC<Props> = ({
 
   return (
     <>
-      <Link href={`/dashboard/my-drafts/${id}`}>
+      <Link
+        href={
+          mode === "SUBMITTED"
+            ? `/dashboard/my-drafts/`
+            : `/dashboard/my-drafts/${id}`
+        }
+      >
         <a className="w-full p-6 border-gray-400 rounded-xl flex flex-col cursor-pointer transition-all duration-150 border-2 hover:border-[#fff]">
           <div className="flex justify-between w-full">
             <span className="text-white text-sm font-display opacity-60">
-              by {userId}
+              by {user}
             </span>
             <span className="bg-green-500 rounded-full px-4 py-1 text-sm text-white font-bold ">
-              {currStatus}
+              {mode === "SUBMITTED" ? "COMPLETED" : "WORK IN PROGRESS"}
             </span>
           </div>
           <span className="mt-3 text-white text-xl font-bold font-display opacity-90">
