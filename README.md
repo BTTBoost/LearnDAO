@@ -12,6 +12,7 @@
 <div align="center">
 
   <h3 align="center">LearnDAO</h3>
+  <img src="assets/LearnDAO.png" />
 
   <p align="center">
     A DAO to build a better internet, together
@@ -53,7 +54,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Poster Image][product-screenshot]](https://joe-api-v2.herokuapp.com/)
+[![Poster Image][product-screenshot]](https://learn-dao.xyz/)
 
 This is a project is a part of Road to Web3 - ETHGlobal Hackathon. Learn DAO is a community to build a better internet, together. Its mission is to help builders create the future of the Web. We plan to execute that mission by building a learning platform. DAO members will be able to propose tutorial guides and get feedback before publishing them.
 
