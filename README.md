@@ -57,7 +57,7 @@
 
 This is a project is a part of Road to Web3 - ETHGlobal Hackathon. Learn DAO is a community to build a better internet, together. Its mission is to help builders create the future of the Web. We plan to execute that mission by building a learning platform. DAO members will be able to propose tutorial guides and get feedback before publishing them.
 
-Writers and reviewers will be rewarded for the content they produce. And anyone with an internet connection will be able to access the guides and collaborate with other members to build. 
+Writers and reviewers will be rewarded for the content they produce. And anyone with an internet connection will be able to access the guides and collaborate with other members to build.
 
 This is a huge problem space and we fully expect Learn DAO to grow its membership, partner with others and inspire more solutions. For instance, there’s a need for better documentation and Q&A databases. Maybe the community will vote to build a product that addresses one of these.
 
@@ -116,7 +116,7 @@ To get a local copy up and running follow these simple steps.
    ```sh
    yarn dev
    ```
-   
+
 2. Contracts addresses can be found [here](https://github.com/Learn-DAO/LearnDAO/blob/main/utils/constants.ts).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -177,4 +177,4 @@ List of resources I find helpful and would like to give credit to.
 [license-url]: https://github.com/Learn-DAO/LearnDAO/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/viral-sangani/
-[product-screenshot]: images/product-image.png
+[product-screenshot]: assets/learn-dao-banner.png
