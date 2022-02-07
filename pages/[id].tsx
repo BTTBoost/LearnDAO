@@ -12,11 +12,11 @@ const Content = () => {
   const [content, setContent] = React.useState(null);
   const router = useRouter();
   const { id } = router.query;
-  useEffect(() => {
-    if (isInitialized && (!isAuthenticated || !user)) {
-      router.replace("/");
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (isInitialized && (!isAuthenticated || !user)) {
+  //     router.replace("/");
+  //   }
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     if (isInitialized) fetchData();
