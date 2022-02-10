@@ -73,7 +73,7 @@ const Content = () => {
             <span className="text-white font-normal text-base mt-0 opacity-60">
               {"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"}
             </span>
-            <div className="reactMarkDown mt-5">
+            <div className="reactMarkDown mt-5 max-w-4xl">
               <Markdown>{content?.get("content")}</Markdown>
             </div>
           </span>
